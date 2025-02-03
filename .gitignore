@@ -1,0 +1,15 @@
+*.pyc
+*.zip
+*.rar
+*.7z
+*.mp3
+*.wav
+.hg/
+*.hgignore
+*.hgtags
+dist/
+build/
+*.egg-info/
+setup2.py
+__pycache__/
+*.conf
