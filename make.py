@@ -28,7 +28,7 @@ def maker():
     parser.add_argument('-u', '--username', default='root', required=True)
     parser.add_argument('-p', '--password', default='root', required=True)
     parser.add_argument('-d', '--durable', help='default: "on"', default='on')
-    parser.add_argument('-e', '--delivery-mode', help='default: 2', default=2, type=int)
+    parser.add_argument('-e', '--delivery-mode', help='default: "persistent"', default="persistent" )
     parser.add_argument('-a', '--auto-delete', help='default: "off"', default="off")
     parser.add_argument('-q', '--quite', help = 'Overwrite any file', action = 'store_true')
     parser.add_argument('-o', '--overwrite', help = 'Overwrite any file, same as "--quite"', action = 'store_true')
