@@ -39,35 +39,37 @@ def maker():
         return
     else:
         args = parser.parse_args()
-        
-        if not args.FILE or not os.path.isfile(str(args.FILE)):
-            FILE = Path.cwd() / 'rabbitmq.conf'
-            if FILE.is_file():
-                if args.quite or args.overwrite:
-                    FILE = Path.cwd() / 'rabbitmq.conf'
-                elif args.auto:
-                    n = 1
-                    while 1:
-                        if FILE.is_file():
-                            FILE = Path.cwd() / f'rabbitmq{n}.conf'
-                            n+=1
-                        else:
-                            break
+        FILE = args.FILE
+        # if not args.FILE or not os.path.isfile(str(args.FILE)):
+        #     FILE = Path.cwd() / 'rabbitmq.conf'
+        # if FILE.is_file():
+            # if args.quite or args.overwrite:
+            #     FILE = Path.cwd() / 'rabbitmq.conf'
+        if args.auto:
+            n = 1
+            while 1:
+                if FILE.is_file():
+                    FILE = Path(FILE).parent / f'rabbitmq{n}.conf'
+                    n+=1
                 else:
-                    q = console.input(f"[warning]'{FILE.__str__()}[/]' [error]is exits[/], [critical]auto create new/overwrite/read[/] ([alert]y[/]/[#FFAAFF bold]n[/]/[error]o[/]/[#00FFFF]r[/]): ")
-                    if q and q.lower() in ['y', 'yes']:
-                        n = 1
-                        while 1:
-                            if FILE.is_file():
-                                FILE = Path.cwd() / f'rabbitmq{n}.conf'
-                                n+=1
-                            else:
-                                break
-                    elif q and q.lower() in ['o', 'overwrite']:
-                        FILE = Path.cwd() / 'rabbitmq.conf'
-                    elif q and q.lower() in ['r', 'read']:
-                        console.print(Syntax(open(FILE, 'r').read(), "c#", theme = 'fruity', line_numbers=True, tab_size=2, code_width=shutil.get_terminal_size()[0], word_wrap = True))
-                        return
+                    break
+        elif (args.overwrite or args.quite) and Path(FILE).is_file():
+            FILE = args.FILE
+        else:
+            q = console.input(f"[warning]'{FILE.__str__()}[/]' [error]is exits[/], [critical]auto create new/overwrite/read[/] ([alert]y[/]/[#FFAAFF bold]n[/]/[error]o[/]/[#00FFFF]r[/]): ")
+            if q and q.lower() in ['y', 'yes']:
+                n = 1
+                while 1:
+                    if FILE.is_file():
+                        FILE = Path(FILE).parent / f'rabbitmq{n}.conf'
+                        n+=1
+                    else:
+                        break
+            elif q and q.lower() in ['o', 'overwrite']:
+                FILE = args.FILE
+            elif q and q.lower() in ['r', 'read']:
+                console.print(Syntax(open(str(FILE), 'r').read(), "c#", theme = 'fruity', line_numbers=True, tab_size=2, code_width=shutil.get_terminal_size()[0], word_wrap = True))
+                return
         
         CONFIG_STR = f'''
 template(name="json" type="list") {{
@@ -113,7 +115,7 @@ template(name="json" type="list") {{
 )
 '''
 
-        with open(FILE, 'w') as f:
+        with open(str(FILE), 'w') as f:
             f.write(CONFIG_STR)
 
 if __name__ == '__main__':
