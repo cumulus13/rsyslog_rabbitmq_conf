@@ -55,7 +55,7 @@ def maker():
                     break
         elif (args.overwrite or args.quite) and Path(FILE).is_file():
             FILE = args.FILE
-        else:
+        elif Path(FILE).is_file():
             q = console.input(f"[warning]'{FILE.__str__()}[/]' [error]is exits[/], [critical]auto create new/overwrite/read[/] ([alert]y[/]/[#FFAAFF bold]n[/]/[error]o[/]/[#00FFFF]r[/]): ")
             if q and q.lower() in ['y', 'yes']:
                 n = 1
